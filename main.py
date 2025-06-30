@@ -1,22 +1,28 @@
-from utils import generate_column_numbers, generate_ticket, print_ticket
+from utils import  generate_ticket
 from fpdf import FPDF
 
-tickets = [generate_ticket() for _ in range(200)]
+tickets = [generate_ticket() for _ in range(300)]
 
-pdf = FPDF()
+pdf = FPDF(format='A4')
 pdf.set_auto_page_break(auto=True, margin=8)
 
+# A4 size in mm: 210 x 297
+page_w = 210
+page_h = 297
 
-ticket_w = 110
-ticket_h = 60
-spacing_x = 1
-spacing_y = 1
+ticket_w = 90
+ticket_h = 45
+spacing_x = 5
+spacing_y = 5
 margin_x = 10
 margin_y = 10
-cell_h = 8
+cell_h = 7
 cell_w = (ticket_w - 2 * margin_x - 2 * spacing_x) / 9
 
-tickets_per_page = 10
+tickets_per_page = 12
+cols = 2
+rows = 6
+
 for page_start in range(0, len(tickets), tickets_per_page):
     pdf.add_page()
     pdf.set_font("Courier", size=10)
@@ -25,9 +31,8 @@ for page_start in range(0, len(tickets), tickets_per_page):
         if idx > len(tickets):
             break
         ticket = tickets[page_start + i]
-        # Calculate position: 3 rows x 4 columns grid
-        grid_row = i // 2
-        grid_col = i % 2
+        grid_row = i // cols
+        grid_col = i % cols
         x = margin_x + grid_col * (ticket_w + spacing_x)
         y = margin_y + grid_row * (ticket_h + spacing_y)
         pdf.set_xy(x, y)
