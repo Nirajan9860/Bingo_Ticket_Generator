@@ -56,7 +56,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        docker rmi ${REGISTRY_URL}/sachin/${IMAGE_NAME}:${IMAGE_TAG} || true
+                        docker rmi ${REGISTRY_URL}/bingo/${IMAGE_NAME}:${IMAGE_TAG} || true
                     """
                 }
             }
