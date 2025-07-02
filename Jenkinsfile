@@ -11,20 +11,11 @@ pipeline {
             steps {
                 // Replace with your build tool, e.g., Gradle, Maven, npm, etc.
                 echo 'Building the project...'
+                python3 main.py
             }
         }
-        stage('Test') {
-            steps {
-                // Replace with your test command
-                echo 'Running tests...'
-            }
-        }
-        stage('Package') {
-            steps {
-                // Replace with your packaging command
-                echo 'Packaging the application...'
-            }
-        }
+
+        
         stage('Deploy') {
             steps {
                 // Replace with your deployment steps
