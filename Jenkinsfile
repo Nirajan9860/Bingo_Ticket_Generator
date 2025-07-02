@@ -1,28 +1,68 @@
 pipeline {
-    agent any
-
+    agent { label 'jenkins_slave-56.12' }
+ 
+    environment {
+        REGISTRY_URL = 'harbor.nirajan.local'
+        IMAGE_NAME = 'bingo'
+        IMAGE_TAG = "v${BUILD_NUMBER}"
+        HARBOR_CREDENTIALS = credentials('HARBOR_CREDENTIALS') // Jenkins credential ID
+    }
+ 
+    options {
+        skipDefaultCheckout()
+    }
+ 
     stages {
-        stage('Checkout') {
+ 
+        stage('Checkout Code') {
             steps {
-                checkout scm
+                git branch: 'master', url: 'https://github.com/Nirajan9860/Bingo_Ticket_Generator.git'
             }
         }
-        stage('Build') {
+ 
+        stage('Build Docker Image') {
             steps {
-                // Replace with your build tool, e.g., Gradle, Maven, npm, etc.
-                echo 'Building the project...'
-                python3 main.py
+                dir('app/backend') {
+                    script {
+                        sh """
+                            docker build -t ${REGISTRY_URL}/bingo/${IMAGE_NAME}:${IMAGE_TAG} .
+                        """
+                    }
+                }
             }
         }
-
-        
-        stage('Deploy') {
+ 
+        stage('Login to Harbor') {
             steps {
-                // Replace with your deployment steps
-                echo 'Deploying the application...'
+                script {
+                    sh """
+                       docker login ${REGISTRY_URL} -u admin -p Harbor12345
+                    """
+                }
+            }
+        }
+ 
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    sh """
+                        docker push ${REGISTRY_URL}/bingo/${IMAGE_NAME}:${IMAGE_TAG}
+                    """
+                }
+            }
+        }
+ 
+        stage('Cleanup') {
+            steps {
+                script {
+                    sh """
+                        docker rmi ${REGISTRY_URL}/sachin/${IMAGE_NAME}:${IMAGE_TAG} || true
+                    """
+                }
             }
         }
     }
+    // Post actions to handle pipeline completion
     post {
         always {
             echo 'Pipeline finished.'
