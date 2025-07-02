@@ -22,13 +22,13 @@ pipeline {
  
         stage('Build Docker Image') {
             steps {
-                dir('app/backend') {
-                    script {
-                        sh """
-                            docker build -t ${REGISTRY_URL}/bingo/${IMAGE_NAME}:${IMAGE_TAG} .
-                        """
-                    }
+                
+                script {
+                    sh """
+                        docker build -t ${REGISTRY_URL}/bingo/${IMAGE_NAME}:${IMAGE_TAG} .
+                    """
                 }
+                
             }
         }
  
