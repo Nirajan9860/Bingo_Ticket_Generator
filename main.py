@@ -48,3 +48,4 @@ for page_start in range(0, len(tickets), tickets_per_page):
         pdf.ln(1)
 pdf.output(".\\bingo_tickets_files\\bingo_tickets.pdf")
 print("PDF generated successfully.")
+print("Total tickets generated:", len(tickets))
